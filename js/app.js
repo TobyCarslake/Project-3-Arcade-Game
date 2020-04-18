@@ -1,6 +1,6 @@
 //TODO remove console.log from Player.prototype.handleInput
-
-
+//TODO set up win condition function
+//
 
 // Enemies our player must avoid
 var Enemy = function(sprite,x,y,speed) {
@@ -13,6 +13,7 @@ var Enemy = function(sprite,x,y,speed) {
     this.x = x;
     this.y = y;
     this.speed = speed;
+     
 };
 
 // Update the enemy's position, required method for game
@@ -22,16 +23,13 @@ Enemy.prototype.update = function(dt) {
     if (this.x <= 500)
     this.x = this.x + this.speed * dt;
     if (this.x > 500)
-    this.x = -100;
-    console.log(this.x,this.y);
-
-    
+    this.x = -100; 
 
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
 };
-//test commit
+
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
@@ -43,16 +41,33 @@ Enemy.prototype.render = function() {
 var Player = function () {
     this.sprite = 'images/char-boy.png';
     this.x = 200;
-    this.y = 370;
+    this.y = 400;
+    
 };
 //block {} if statement to execute more than one statement!!!!
 //checks where location of player is if outside of box resets back to start position
 Player.prototype.update = function (dt){
-    //Enemy.x
-    //console.log(allEnemies[0].x);
 
-    if (this.x < 0 || this.x > 400 || this.y < -30 || this.y > 370){
-        this.y = 370;
+if (this.y < -14) {
+    console.log('win' + this.y);
+    //main();
+}
+    for (let enemy of allEnemies) {
+        let distanceX = this.x - enemy.x - 15;
+        let distanceY = this.y - enemy.y - 20;
+        let distanceTot = Math.sqrt (distanceX * distanceX + distanceY * distanceY);
+            
+        if (distanceTot < 60) {
+            
+            console.log('hit');
+        }
+    }
+    
+    
+   
+
+    if (this.x < 0 || this.x > 400 || this.y < -15 || this.y > 400){
+        this.y = 400;
         this.x = 200;
     }
 };
@@ -66,9 +81,9 @@ Player.prototype.handleInput = function(dt){
         if (dt == 'right')
         this.x += 100;
         if (dt == 'up')
-        this.y -= 80;
+        this.y -= 83;
         if (dt == 'down')
-        this.y += 80;
+        this.y += 83;
         console.log(this.x, this.y);
 };
 
@@ -76,7 +91,7 @@ Player.prototype.handleInput = function(dt){
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-var allEnemies = [new Enemy('images/enemy-bug.png',1, 70, 28), new Enemy('images/char-horn-girl.png', 1, 150, 235), new Enemy('images/char-horn-girl.png', 1, 220, 100), new Enemy('images/enemy-bug.png',1, 220, 56)];
+var allEnemies = [new Enemy('images/enemy-bug.png',1, 70, 32), new Enemy('images/enemy-bug.png',1, 70, 70), new Enemy('images/enemy-bug.png',-99, 150, 28), new Enemy('images/enemy-bug.png',1, 220, 56), new Enemy('images/enemy-bug.png',1, 220, 130)];
 var player = new Player();
 
 
@@ -103,5 +118,3 @@ document.addEventListener('keyup', function(e) {
     
     
 });
-// enum type to player object set to alive or dead
-//let eKeyCode = player.handleInput(allowedKeys[e.keyCode]);
