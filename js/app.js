@@ -1,3 +1,7 @@
+//TODO remove console.log from Player.prototype.update
+
+
+
 // Enemies our player must avoid
 var Enemy = function() {
     // Variables applied to each of our instances go here,
@@ -8,13 +12,18 @@ var Enemy = function() {
     this.sprite = 'images/enemy-bug.png';
     this.x = 1;
     this.y = 50;
-    //this.position = (this.x, this.y);
-    //this.speed(15);    
+    this.speed = 100;
 };
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
+//checks bug is inside window if it is it sets its position to = its speed * dt. If not draws bug back where it started
 Enemy.prototype.update = function(dt) {
+    if (this.x <= 500)
+    this.x = this.x + this.speed * dt;
+    if (this.x > 500)
+    this.x = 1;
+
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
@@ -30,32 +39,39 @@ Enemy.prototype.render = function() {
 // a handleInput() method.
 var Player = function () {
     this.sprite = 'images/char-boy.png';
-    this.position = (this.x, this.y);
     this.x = 200;
     this.y = 370;
 };
+//block {} if statement to execute more than one statement!!!!
+//checks where location of player is if outside of box resets back to start position
 Player.prototype.update = function (dt){
+    if (this.x < 0 || this.x > 400 || this.y < -30 || this.y > 370){
+        this.y = 370;
+        this.x = 200;
+    }
+        console.log();
 };
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 Player.prototype.handleInput = function(dt){
-    console.log(dt);
-    if(dt == 'left')
-    this.x -= 100;
-    if (dt == 'right')
-    this.x += 100;
-    if (dt == 'up')
-    this.y -= 80;
-    if (dt == 'down')
-    this.y += 80;
+     
+        if(dt == 'left')
+        this.x -= 100;
+        if (dt == 'right')
+        this.x += 100;
+        if (dt == 'up')
+        this.y -= 80;
+        if (dt == 'down')
+        this.y += 80;
+        console.log(this.x, this.y);
 };
 
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-var allEnemies = [new Enemy()];
+var allEnemies = [new Enemy()];//; Enemy(1,100); Enemy(1,150)];
 var player = new Player();
 // TC add in collision function
 //axis aligned bounding box mdn for collisions when not not colliding and when not coliding
@@ -74,7 +90,7 @@ document.addEventListener('keyup', function(e) {
     };
 
     player.handleInput(allowedKeys[e.keyCode]);
-    console.log(e.keyCode);
+    
     
 });
 // enum type to player object set to alive or dead
