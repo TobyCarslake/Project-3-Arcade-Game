@@ -6,7 +6,7 @@ Open index.html. The game will load.
 
 ## Introduction
 
-You are the boy, you are on the grass. Your goal is to cross the road and reach the river without getting squashed by a bug. The bugs stay on the road
+You are the boy, you are on the grass. Your goal is to cross the road and reach the river without getting squashed by a bug. The bugs stay on the road and move at different speeds.
 
 ## How to play
 
