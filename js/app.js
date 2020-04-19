@@ -43,7 +43,7 @@ var Player = function () {
 //block {} if statement to execute more than one statement!!!!
 //collison alert - calls respawn function
 function ouch() {
-    alert("You were squashed by a bug!");
+    alert("You were squashed by a bug! Click OK to restart.");
     respawn();
 }
 
