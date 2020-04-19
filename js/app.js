@@ -60,7 +60,7 @@ Player.prototype.update = function (dt){
         let distanceX = this.x - eachBug.x - 15; //player x position - 
         let distanceY = this.y - eachBug.y - 20;
         let distanceTot = Math.sqrt (distanceX * distanceX + distanceY * distanceY);
-        console.log(distanceX, distanceY, distanceTot);
+        
         // checks distance between player and each bug if collision calls ouch function after 1ms. Timer function runs so that canvas can update the player position and then call the ouch function.
         if (distanceTot < 60) {
             setTimeout(function(){
