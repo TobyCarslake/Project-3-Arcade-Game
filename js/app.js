@@ -1,6 +1,3 @@
-//TODO remove console.log from Player.prototype.handleInput
-//TODO set up win condition function
-//
 
 // Enemies our player must avoid
 var Enemy = function(sprite,x,y,speed) {
@@ -18,16 +15,15 @@ var Enemy = function(sprite,x,y,speed) {
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
-//checks bug is inside window if it is it sets its position to = its speed * dt. If not draws bug back where it started
+    // You should multiply any movement by the dt parameter
+    // which will ensure the game runs at the same speed for
+    // all computers.
+//checks bug is inside window if it is, it sets its position to = its speed * dt. If not draws bug back where it started
 Enemy.prototype.update = function(dt) {
     if (this.x <= 500)
     this.x = this.x + this.speed * dt;
     if (this.x > 500)
-    this.x = -100; 
-
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
+    this.x = -100;
 };
 
 // Draw the enemy on the screen, required method for game
@@ -42,38 +38,55 @@ var Player = function () {
     this.sprite = 'images/char-boy.png';
     this.x = 200;
     this.y = 400;
-    
 };
-//block {} if statement to execute more than one statement!!!!
-//checks where location of player is if outside of box resets back to start position
-Player.prototype.update = function (dt){
 
-if (this.y < -14) {
-    console.log('win' + this.y);
-    //main();
+//block {} if statement to execute more than one statement!!!!
+//collison alert - calls respawn function
+function ouch() {
+    alert("You were squashed by a bug!");
+    respawn();
 }
-    for (let enemy of allEnemies) {
-        let distanceX = this.x - enemy.x - 15;
-        let distanceY = this.y - enemy.y - 20;
+
+// respawns player back to middle bottom tile - this is called from functions: ouch, win condition,
+function respawn() {
+    player.y = 400;
+    player.x = 200;
+}
+
+//collision function and updater of bugs and player positions. If collison = true calls ouch function.
+//Uses calculate hypotenuse https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/sqrt
+Player.prototype.update = function (dt){
+    for (let eachBug of allEnemies) {
+        let distanceX = this.x - eachBug.x - 15; //player x position - 
+        let distanceY = this.y - eachBug.y - 20;
         let distanceTot = Math.sqrt (distanceX * distanceX + distanceY * distanceY);
-            
+        console.log(distanceX, distanceY, distanceTot);
+        // checks distance between player and each bug if collision calls ouch function after 1ms. Timer function runs so that canvas can update the player position and then call the ouch function.
         if (distanceTot < 60) {
-            
-            console.log('hit');
+            setTimeout(function(){
+                ouch();
+            }, 1);
         }
     }
-    
-    
+    //win condtion - runs when the player reaches the river tile at y = -15. Timer function lets the player sprite get redrawn before the alert is triggered.
+    if (this.y < -14) {
+        setTimeout(function(){
+            alert("You won, good job. Click OK to restart.");
+            respawn();
+            }, 1); 
+    }
    
-
-    if (this.x < 0 || this.x > 400 || this.y < -15 || this.y > 400){
-        this.y = 400;
-        this.x = 200;
+    //checks where location of player is, if outside of box calls respawn function to reset player back to start position
+    if (this.x < 0 || this.x > 400 || this.y > 400){
+        respawn();
     }
 };
+//draws player on canvas
 Player.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y); 
 };
+
+// takes keypress codes and sets player x and y position to be redrawn based on which key has been pressed
 Player.prototype.handleInput = function(dt){
      
         if(dt == 'left')
@@ -84,9 +97,7 @@ Player.prototype.handleInput = function(dt){
         this.y -= 83;
         if (dt == 'down')
         this.y += 83;
-        console.log(this.x, this.y);
 };
-
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
@@ -94,18 +105,8 @@ Player.prototype.handleInput = function(dt){
 var allEnemies = [new Enemy('images/enemy-bug.png',1, 70, 32), new Enemy('images/enemy-bug.png',1, 70, 70), new Enemy('images/enemy-bug.png',-99, 150, 28), new Enemy('images/enemy-bug.png',1, 220, 56), new Enemy('images/enemy-bug.png',1, 220, 130)];
 var player = new Player();
 
-
-// TC add in collision function
-//axis aligned bounding box mdn for collisions when not not colliding and when not coliding
-// size of players bugs sized to 
-// move up x pixels to keep the player sprite in the box
-
-
-
-
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
-
 document.addEventListener('keyup', function(e) {
     var allowedKeys = {
         37: 'left',
@@ -115,6 +116,4 @@ document.addEventListener('keyup', function(e) {
     };
 
     player.handleInput(allowedKeys[e.keyCode]);
-    
-    
 });
